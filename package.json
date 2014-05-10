@@ -1,6 +1,6 @@
 {
   "name": "center-screen",
-  "main": "./lib/center-screen",
+  "main": "./lib/main",
   "version": "0.1.1",
   "description": "Center the screen on the selected line",
   "activationEvents": [
@@ -11,5 +11,7 @@
   "engines": {
     "atom": ">0.50.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "emissary": "1.x"
+  }
 }

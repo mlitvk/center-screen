@@ -1,7 +1,11 @@
-module.exports =
+{EditorView} = require 'atom'
+{Subscriber} = require 'emissary'
 
-  activate: (state) ->
-    {EditorView} = require 'atom'
+module.exports =
+class CenterScreen
+  Subscriber.includeInto(this)
+
+  constructor: (@editorView) ->
 
     EditorView::scrollVertically = (pixelPosition, {center}={}) ->
       scrollViewHeight = @scrollView.height()
@@ -44,14 +48,33 @@ module.exports =
 
     atom.workspaceView.getActiveView().updateLayerDimensions()
 
+    @subscribe atom.config.observe 'center-screen.followCursor', callNow:false, =>
+      @updateSubscription()
+
+    @updateSubscription()
+
     atom.workspaceView.command 'center-screen:center-screen', =>
       @centerScreen()
 
   cursorLine: ->
-    atom.workspace.getActiveEditor().getCursorScreenRow()
+    atom.workspace.getActiveEditor()?.getCursorScreenRow()
 
   centerScreen: ->
-    atom.workspaceView.getActiveView().scrollToScreenPosition(
-      [@cursorLine(), 0],
-      { center: true }
-    );
+    line = @cursorLine()
+    if line
+      atom.workspaceView.getActiveView().scrollToScreenPosition(
+        [line, 0],
+        { center: true }
+      )
+
+  followCursorConfig: ->
+    atom.config.get('center-screen.followCursor')
+
+  updateSubscription: ->
+    followCursor = @followCursorConfig()
+    if followCursor
+      @subscribe @editorView, 'cursor:moved', =>
+        @centerScreen()
+      @centerScreen()
+    else
+        @unsubscribe @editorView
