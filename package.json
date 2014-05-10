@@ -1,14 +1,15 @@
 {
   "name": "center-screen",
   "main": "./lib/center-screen",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Center the screen on the selected line",
-  "activationEvents": ["center-screen:center-screen"],
+  "activationEvents": [
+    "center-screen:center-screen"
+  ],
   "repository": "https://github.com/mlitbk/center-screen",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
