@@ -42,6 +42,8 @@ module.exports =
         @layerMinWidth = minWidth
         @trigger('editor:min-width-changed')
 
+    atom.workspaceView.getActiveView().updateLayerDimensions()
+
     atom.workspaceView.command 'center-screen:center-screen', =>
       @centerScreen()
 
