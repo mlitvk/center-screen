@@ -18,7 +18,7 @@ You can choose to keep the selected line centered when you move by using
 the _Follow Cursor_ option in one of the following ways:
 * Enable `Follow Cursor` in the settings for this package
 * Choose `Center Screen: Toggle Follow Cursor` from the command palette
-![center-screen screenshot](https://cloud.githubusercontent.com/assets/6184864/2947826/e850b426-d9fa-11e3-975a-916b7dc71135.gif)
+![center-screen screencast](https://cloud.githubusercontent.com/assets/6184864/3077827/cfd6b7ce-e445-11e3-91a3-097efbb99fae.gif)
 
 ## Credits
 * [scroll-past-end](https://atom.io/packages/scroll-past-end) for the updateLayerDimensions idea
