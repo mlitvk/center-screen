@@ -1,4 +1,3 @@
-{EditorView} = require 'atom'
 {Subscriber} = require 'emissary'
 
 module.exports =
@@ -7,6 +6,45 @@ class CenterScreen
 
   constructor: (@editorView) ->
 
+    DisplayBuffer = require "src/display-buffer"
+    DisplayBuffer::getScrollHeight = ->
+      lineHeight = if @getLineHeight then @getLineHeight() else @getLineHeightInPixels()
+      if not lineHeight > 0
+        throw new Error("You must assign lineHeight before calling ::getScrollHeight()")
+      height = @getLineCount() * lineHeight
+      height = height + @getHeight() / 2
+      height
+
+    DisplayBuffer::scrollToScreenRange = (screenRange, options) ->
+      verticalScrollMarginInPixels = @getVerticalScrollMargin() * @getLineHeightInPixels()
+      horizontalScrollMarginInPixels = @getHorizontalScrollMargin() * @getDefaultCharWidth()
+
+      {top, left, height, width} = @pixelRectForScreenRange(screenRange)
+      bottom = top + height
+      right = left + width
+
+      if options?.center
+        desiredScrollCenter = top + height / 2
+        desiredScrollTop =  desiredScrollCenter - @getHeight() / 2
+        desiredScrollBottom =  desiredScrollCenter + @getHeight() / 2
+      else
+        desiredScrollTop = top - verticalScrollMarginInPixels
+        desiredScrollBottom = bottom + verticalScrollMarginInPixels
+
+      desiredScrollLeft = left - horizontalScrollMarginInPixels
+      desiredScrollRight = right + horizontalScrollMarginInPixels
+
+      if desiredScrollTop < @getScrollTop()
+        @setScrollTop(desiredScrollTop)
+      else if desiredScrollBottom > @getScrollBottom()
+        @setScrollBottom(desiredScrollBottom)
+
+      if desiredScrollLeft < @getScrollLeft()
+        @setScrollLeft(desiredScrollLeft)
+      else if desiredScrollRight > @getScrollRight()
+        @setScrollRight(desiredScrollRight)
+
+    EditorView = require "src/editor-view"
     EditorView::scrollVertically = (pixelPosition, {center}={}) ->
       scrollViewHeight = @scrollView.height()
       scrollTop = @scrollTop()
@@ -45,8 +83,6 @@ class CenterScreen
         @overlayer.css('min-width', minWidth)
         @layerMinWidth = minWidth
         @trigger('editor:min-width-changed')
-
-    atom.workspaceView.getActiveView().updateLayerDimensions()
 
     @subscribe atom.config.observe 'center-screen.followCursor', callNow:false, =>
       @updateSubscription()
