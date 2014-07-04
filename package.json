@@ -1,7 +1,7 @@
 {
   "name": "center-screen",
   "main": "./lib/main",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Center the screen on the selected line",
   "activationEvents": [
     "center-screen:center-screen"
